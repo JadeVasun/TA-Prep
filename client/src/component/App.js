@@ -7,58 +7,61 @@ class App extends Component {
     super(props);
     
     this.state = {
+      term: '',
       items: [],
-      updated: false,
+      //updated: false,
     };
+    this.fetchData = this.fetchData.bind(this);
   }
-  
-  // handleChange (event) {
-  //   this.setState({term: event.target.value});
-  // }
-  
-  handleSubmit (event){
-    event.preventDefault();
 
-    let text = document.getElementById('task');
-    
-    var context = this;
-    //make {todo match with req.body on controller}
-    axios.post('http://localhost:1337/api/users', {todo: text.value})
-    .then(data => {
-      context.setState ({
-        updated: false,
-        // term: '',
-        // items: [...this.state.items, this.state.term]
-        //console.log(data)
-      })
-      text.value = '';
-    })
-    .catch(err => console.log('Error in post: ', err));
+  componentDidMount() {
+    this.fetchData();
   }
-  
-  handleUpdates () {
+
+  fetchData() {
+    console.log('fetching data');
     axios.get('http://localhost:1337/api/users')
       .then(results => {
-        this.setState({items: results.data, updated: true}, console.log('this is this.state.items: ', this.state.items));
+        this.setState({items: results.data}, console.log('this is this.state.items: ', this.state.items));
       })
       .catch(err => console.log('error: ', err))
   }
+
+  handleChange (event) {
+    event.preventDefault();
+    //console.log('THIS IS TERM', event.target.value);
+    this.setState({term: event.target.value});
+    
+  }
+
+  
+
+  handleSubmit (event){
+    // event.preventDefault();
+    console.log('something');
+    var context = this;
+    //make {todo match with req.body on controller}
+   if (this.state.term.length > 0) {
+      axios.post('http://localhost:1337/api/users', {todo: this.state.term})
+        .then(data => {
+          console.log(data)
+          this.fetchData();
+        })
+        .catch(err => console.log('Error in post: ', err));
+      }
+    }
   
   render() {
-    if (!this.state.updated) {
-      this.handleUpdates();
-    }
-
-      return (
-        <div>
-          <form className="App">
-            <input id="task" type="text" />
-            <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
-          </form>
-          <List items={this.state.items} />
-        </div>
-      );
-    }
+    return (
+      <div>
+        <form className="App" onSubmit={(event) => this.handleSubmit(event)}>
+          <input value={this.state.term} onChange={(event) => this.handleChange(event)} />
+          <button type="submit">Submit</button>
+        </form>
+        <List items={this.state.items} />
+      </div>
+    );
+  }
 }
 
 export default App;

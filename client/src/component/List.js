@@ -2,7 +2,7 @@ import React from 'react';
 import ListEntry from './ListEntry';
 
 const List = ({items}) => {
-  console.log(items);
+  // console.log(items);
   return (
   <ul>
     {

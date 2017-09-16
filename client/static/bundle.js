@@ -22315,65 +22315,75 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      items: [],
-      updated: false
+      term: '',
+      items: []
+      //updated: false,
     };
+    _this.fetchData = _this.fetchData.bind(_this);
     return _this;
   }
 
-  // handleChange (event) {
-  //   this.setState({term: event.target.value});
-  // }
-
   _createClass(App, [{
-    key: 'handleSubmit',
-    value: function handleSubmit(event) {
-      event.preventDefault();
-
-      var text = document.getElementById('task');
-
-      var context = this;
-      //make {todo match with req.body on controller}
-      _axios2.default.post('http://localhost:1337/api/users', { todo: text.value }).then(function (data) {
-        context.setState({
-          updated: false
-          // term: '',
-          // items: [...this.state.items, this.state.term]
-          //console.log(data)
-        });
-        text.value = '';
-      }).catch(function (err) {
-        return console.log('Error in post: ', err);
-      });
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.fetchData();
     }
   }, {
-    key: 'handleUpdates',
-    value: function handleUpdates() {
+    key: 'fetchData',
+    value: function fetchData() {
       var _this2 = this;
 
+      console.log('fetching data');
       _axios2.default.get('http://localhost:1337/api/users').then(function (results) {
-        _this2.setState({ items: results.data, updated: true }, console.log('this is this.state.items: ', _this2.state.items));
+        _this2.setState({ items: results.data }, console.log('this is this.state.items: ', _this2.state.items));
       }).catch(function (err) {
         return console.log('error: ', err);
       });
     }
   }, {
+    key: 'handleChange',
+    value: function handleChange(event) {
+      event.preventDefault();
+      //console.log('THIS IS TERM', event.target.value);
+      this.setState({ term: event.target.value });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(event) {
+      var _this3 = this;
+
+      // event.preventDefault();
+      console.log('something');
+      var context = this;
+      //make {todo match with req.body on controller}
+      if (this.state.term.length > 0) {
+        _axios2.default.post('http://localhost:1337/api/users', { todo: this.state.term }).then(function (data) {
+          console.log(data);
+          _this3.fetchData();
+        }).catch(function (err) {
+          return console.log('Error in post: ', err);
+        });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
-      if (!this.state.updated) {
-        this.handleUpdates();
-      }
+      var _this4 = this;
 
       return _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement(
           'form',
-          { className: 'App' },
-          _react2.default.createElement('input', { id: 'task', type: 'text' }),
+          { className: 'App', onSubmit: function onSubmit(event) {
+              return _this4.handleSubmit(event);
+            } },
+          _react2.default.createElement('input', { value: this.state.term, onChange: function onChange(event) {
+              return _this4.handleChange(event);
+            } }),
           _react2.default.createElement(
             'button',
-            { type: 'submit', onClick: this.handleSubmit.bind(this) },
+            { type: 'submit' },
             'Submit'
           )
         ),
@@ -22411,7 +22421,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var List = function List(_ref) {
   var items = _ref.items;
 
-  console.log(items);
+  // console.log(items);
   return _react2.default.createElement(
     'ul',
     null,
@@ -22443,11 +22453,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var ListEntry = function ListEntry(_ref) {
   var item = _ref.item;
 
-  console.log(item);
+  // console.log(item);
   return _react2.default.createElement(
     'div',
     null,
-    item.tasks
+    item.tasks,
+    _react2.default.createElement(
+      'span',
+      null,
+      ' X '
+    )
   );
 };
 
