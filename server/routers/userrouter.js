@@ -6,7 +6,7 @@ console.log('this is the usercontroller for the get ', userController.getAllUser
 //userController is the variable the is getting from user.controllerjs
 router.route('/users')
 .get(userController.getAllUsers)
-.post(userController.addUserToTable)
+.post(userController.handleUserSubmit)
 //then add to server
 
   module.exports = router;

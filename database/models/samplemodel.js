@@ -6,7 +6,7 @@ const User = database.define ('users', {
   name: Sequelize.STRING,
   age: Sequelize.INTEGER
 });
-const Todos = database.define ('users', {
+const Todos = database.define ('todos', {
   tasks: Sequelize.STRING
 });
 // User.hasMany(Todos,
@@ -16,7 +16,13 @@ User.sync()
 //then is successful, catch unsuccessful
   .then(() => console.log('table succesful'))
   .catch(() => console.log('table failed'))
+Todos.sync()
+  .then(() => console.log('table successful'))
+  .catch(() => console.log('table failed'))
 
 
-  module.exports = User;
+  module.exports = {
+    User: User,
+    Todos: Todos
+  }
   //then go to controller in server to define functions you need
