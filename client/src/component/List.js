@@ -1,8 +1,8 @@
 import React from 'react';
 import ListEntry from './ListEntry';
 
-const List = ({items}) => {
-  // console.log(items);
+const List = ({style, items, completed, finished}) => {
+  console.log('THIS IS', completed);
   return (
   <ul>
     {

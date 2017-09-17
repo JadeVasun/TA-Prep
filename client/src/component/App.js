@@ -9,6 +9,7 @@ class App extends Component {
     this.state = {
       term: '',
       items: [],
+      completed: false
       //updated: false,
     };
     this.fetchData = this.fetchData.bind(this);
@@ -39,7 +40,6 @@ class App extends Component {
   handleSubmit (event){
     // event.preventDefault();
     console.log('something');
-    var context = this;
     //make {todo match with req.body on controller}
    if (this.state.term.length > 0) {
       axios.post('http://localhost:1337/api/users', {todo: this.state.term})
@@ -50,15 +50,23 @@ class App extends Component {
         .catch(err => console.log('Error in post: ', err));
       }
     }
+  handleFinishedItem (event) {
+    console.log('CLICKCLICKCLICK')
+    this.setState({
+      completed: !this.state.completed})
+  }
   
   render() {
+    var style = {
+      textDecoration: this.state.completed ? 'line-through' : 'none',
+    };
     return (
       <div>
         <form className="App" onSubmit={(event) => this.handleSubmit(event)}>
           <input value={this.state.term} onChange={(event) => this.handleChange(event)} />
           <button type="submit">Submit</button>
         </form>
-        <List items={this.state.items} />
+        <List style = {style} items = {this.state.items} completed = {this.state.completed} finished = {this.handleFinishedItem.bind(this)} />
       </div>
     );
   }
