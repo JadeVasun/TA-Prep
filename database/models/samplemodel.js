@@ -1,5 +1,6 @@
 const database = require('../dbconfig');
 const Sequelize = require('sequelize');
+const seed = require('../seeding');
 
 //db.define makes table in database defining that user can be inserted. so 'users' is the name of the table
 const User = database.define ('users', {
@@ -16,8 +17,8 @@ User.sync()
 //then is successful, catch unsuccessful
   .then(() => console.log('table succesful'))
   .catch(() => console.log('table failed'))
-Todos.sync()
-  .then(() => console.log('table successful'))
+Todos.sync({force: true})
+  .then(() => seed(Todos))
   .catch(() => console.log('table failed'))
 
 
