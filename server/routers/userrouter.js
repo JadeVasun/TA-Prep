@@ -5,8 +5,11 @@ console.log('this is the usercontroller for the get ', userController.getAllUser
 //this comes at end of html
 //userController is the variable the is getting from user.controllerjs
 router.route('/users')
-.get(userController.getAllUsers)
+.get(userController.getAllTasks)
 .post(userController.handleUserSubmit)
+
+router.route('/users/:id')
+.delete(userController.deleteItems)
 //then add to server
 
   module.exports = router;

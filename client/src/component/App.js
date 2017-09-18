@@ -18,7 +18,6 @@ class App extends Component {
   componentDidMount() {
     this.fetchData();
   }
-
   fetchData() {
     console.log('fetching data');
     axios.get('http://localhost:1337/api/users')
@@ -50,23 +49,15 @@ class App extends Component {
         .catch(err => console.log('Error in post: ', err));
       }
     }
-  handleFinishedItem (event) {
-    console.log('CLICKCLICKCLICK')
-    this.setState({
-      completed: !this.state.completed})
-  }
   
   render() {
-    var style = {
-      textDecoration: this.state.completed ? 'line-through' : 'none',
-    };
     return (
       <div>
         <form className="App" onSubmit={(event) => this.handleSubmit(event)}>
           <input value={this.state.term} onChange={(event) => this.handleChange(event)} />
           <button type="submit">Submit</button>
         </form>
-        <List style = {style} items = {this.state.items} completed = {this.state.completed} finished = {this.handleFinishedItem.bind(this)} />
+        <List items = {this.state.items} />
       </div>
     );
   }

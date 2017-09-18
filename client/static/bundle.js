@@ -23026,20 +23026,10 @@ var App = function (_Component) {
       }
     }
   }, {
-    key: 'handleFinishedItem',
-    value: function handleFinishedItem(event) {
-      console.log('CLICKCLICKCLICK');
-      this.setState({
-        completed: !this.state.completed });
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this4 = this;
 
-      var style = {
-        textDecoration: this.state.completed ? 'line-through' : 'none'
-      };
       return _react2.default.createElement(
         'div',
         null,
@@ -23057,7 +23047,7 @@ var App = function (_Component) {
             'Submit'
           )
         ),
-        _react2.default.createElement(_List2.default, { style: style, items: this.state.items, completed: this.state.completed, finished: this.handleFinishedItem.bind(this) })
+        _react2.default.createElement(_List2.default, { items: this.state.items })
       );
     }
   }]);
@@ -23952,6 +23942,10 @@ var _react = __webpack_require__(25);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _axios = __webpack_require__(192);
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -23969,38 +23963,57 @@ var ListEntry = function (_Component) {
     var _this = _possibleConstructorReturn(this, (ListEntry.__proto__ || Object.getPrototypeOf(ListEntry)).call(this));
 
     _this.state = {
-      completed: false
+      isChecked: false,
+      itemsDeleted: false
     };
     _this.handleCompleted = _this.handleCompleted.bind(_this);
+    _this.clearCompleted = _this.clearCompleted.bind(_this);
     return _this;
   }
 
   _createClass(ListEntry, [{
     key: 'handleCompleted',
-    value: function handleCompleted() {
+    value: function handleCompleted(event) {
       this.setState({
-        completed: !this.state.completed
+        isChecked: event.target.checked
+      });
+    }
+  }, {
+    key: 'clearCompleted',
+    value: function clearCompleted(event) {
+      var id = event.target.id;
+      //console.log('whats up', event.id);
+      // console.log(id);
+      _axios2.default.delete('http://localhost:1337/api/users/' + id).then(function () {
+        console.log('SUCCESSFUL DELETION');
+        window.location.reload();
+      }).catch(function () {
+        return console.log('error error');
       });
     }
   }, {
     key: 'render',
     value: function render() {
+      //console.log(this.props.item);
       var style = {
-        textDecoration: this.state.completed ? 'line-through' : 'none'
+        textDecoration: this.state.isChecked ? 'line-through' : 'none'
       };
+
+      console.log('THIS IS', this.props.item);
+
       return _react2.default.createElement(
         'div',
-        null,
+        { style: style },
+        _react2.default.createElement('input', {
+          type: 'checkbox',
+          ref: 'complete',
+          onChange: this.handleCompleted
+        }),
+        this.props.item.tasks,
         _react2.default.createElement(
-          'label',
-          { style: style },
-          _react2.default.createElement('input', {
-            type: 'checkbox',
-            defaultChecked: this.state.completed,
-            ref: 'complete',
-            onChange: this.handleCompleted
-          }),
-          this.props.item.tasks
+          'button',
+          { id: this.props.item.id, onClick: this.clearCompleted },
+          'DELETE'
         )
       );
     }
